@@ -18,6 +18,7 @@ const sharp = require('sharp');
 const log = require('../libraries/logging.js');
 const resbuilder = require('../libraries/resultbuilder.js');
 const db = require('../libraries/dbqueries.js');
+const defaultCrabList = require('../libraries/defaultCrabList.js');
 
 // Congifiguration
 const config = require('../config/auth-config.js');
@@ -84,18 +85,30 @@ function initializeRoute(req){
     }
 }
 
+function hslToRgb(h, s, l){
+    var r, g, b;
+    if(s == 0){
+        r = g = b = l; // achromatic
+    }else{
+        var hue2rgb = function hue2rgb(p, q, t){
+            if(t < 0) t += 1;
+            if(t > 1) t -= 1;
+            if(t < 1/6) return p + (q - p) * 6 * t;
+            if(t < 1/2) return q;
+            if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+            return p;
+        }
+        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        var p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+    }
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+}
+
 const imgBaseFolder = 'img';
 const maxFileSize = 4 * 1024 * 1024;
-// Multer Setup
-// var storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//       cb(null, path.join(imgBaseFolder, 'tmp'))
-//     },
-//     filename: function (req, file, cb) {
-//       cb(null, uuidv4())
-//     }
-// });
-// var upload = multer({ storage: storage });
 
 var storage = multer.memoryStorage();
 var upload = multer({ 
@@ -134,7 +147,7 @@ router.post('/contact/:id', upload, function (err, req, res, next) {
     } else {
         next();
     }
-}, function(req, res){
+    }, function(req, res){
     // Get Timer and Result Builder
     var {timer, result} = initializeRoute(req);
     
@@ -277,7 +290,16 @@ router.get('/contact/:id', function(req, res){
 
     // Validation of Request id parameter before use
     if ( !(_.has(req.params, "id")) || req.params.id == null || req.params.id == undefined){
-
+        var index = Math.floor(Math.random() * defaultCrabList.length);
+        var fname = defaultCrabList[index];
+        var relPath = path.join("default","generated",fname);
+        var img = fs.createReadStream(relPath);
+        img.on('open', function(){
+            res.set('Content-type', 'image/jpeg');
+            img.pipe(res);
+        });
+        timer.endTimer(result);
+        return;
         result.setStatus(400);
         result.addError("Request Requires Parameter id to be filled");
         result.setPayload({});
@@ -287,6 +309,16 @@ router.get('/contact/:id', function(req, res){
     }
 
     if(!mongodb.ObjectID.isValid(req.params.id)){
+        var index = Math.floor(Math.random() * defaultCrabList.length);
+        var fname = defaultCrabList[index];
+        var relPath = path.join("default","generated",fname);
+        var img = fs.createReadStream(relPath);
+        img.on('open', function(){
+            res.set('Content-type', 'image/jpeg');
+            img.pipe(res);
+        });
+        timer.endTimer(result);
+        return;
         result.setStatus(400);
         result.addError("parameter id is not valid");
         result.setPayload({});
@@ -299,13 +331,33 @@ router.get('/contact/:id', function(req, res){
 
     Contact.findOne({ _id: paramID, userID: userID}, function(err, contact){
         if(err){
+            var index = Math.floor(Math.random() * defaultCrabList.length);
+            var fname = defaultCrabList[index];
+            var relPath = path.join("default","generated",fname);
+            var img = fs.createReadStream(relPath);
+            img.on('open', function(){
+                res.set('Content-type', 'image/jpeg');
+                img.pipe(res);
+            });
+            timer.endTimer(result);
+            return;
             result.setStatus(500);
             result.setPayload({});
             res.status(result.getStatus()).type('application/json').send(result.getPayload());
             timer.endTimer(result);
             return;
         }else{
-            if(contact.length == 0){
+            if(contact == null || contact.length == 0){
+                var index = Math.floor(Math.random() * defaultCrabList.length);
+                var fname = defaultCrabList[index];
+                var relPath = path.join("default","generated",fname);
+                var img = fs.createReadStream(relPath);
+                img.on('open', function(){
+                    res.set('Content-type', 'image/jpeg');
+                    img.pipe(res);
+                });
+                timer.endTimer(result);
+                return;
                 result.setStatus(400);
                 result.addError("No Such Contact Found With Specified id");
                 result.setPayload({});
@@ -318,10 +370,36 @@ router.get('/contact/:id', function(req, res){
                 db.select.getContactPhoto(pool, userID, paramID, success, failure);
 
                 function success(qres){
-                    // TODO Validate Result Not Empty
-                    console.log(qres.rows[0])
-                    var relPath = path.join(imgBaseFolder, qres.rows[0].filename);
-                    // PG Insert Successful
+                    if(qres.rowCount == 0){
+                        // Select A Crab
+                        var index = Math.floor(Math.random() * defaultCrabList.length);
+                        var fname = defaultCrabList[index];
+                        var relPath = path.join("default","generated",fname);
+                        var img = fs.createReadStream(relPath);
+                        img.on('open', function(){
+                            res.set('Content-type', 'image/jpeg');
+                            img.pipe(res);
+                        });
+                        timer.endTimer(result);
+                        return;
+                    }else{
+                        // console.log(qres.rows[0])
+                        var relPath = path.join(imgBaseFolder, qres.rows[0].filename);
+                        // PG Insert Successful
+                        var img = fs.createReadStream(relPath);
+                        img.on('open', function(){
+                            res.set('Content-type', 'image/jpeg');
+                            img.pipe(res);
+                        });
+                        timer.endTimer(result);
+                        return;
+                    }
+                }
+
+                function failure(error){
+                    var index = Math.floor(Math.random() * defaultCrabList.length);
+                    var fname = defaultCrabList[index];
+                    var relPath = path.join("default","generated",fname);
                     var img = fs.createReadStream(relPath);
                     img.on('open', function(){
                         res.set('Content-type', 'image/jpeg');
@@ -329,9 +407,6 @@ router.get('/contact/:id', function(req, res){
                     });
                     timer.endTimer(result);
                     return;
-                }
-
-                function failure(error){
                     result.setStatus(500);
                     result.setPayload({});
                     res.status(result.getStatus()).type('application/json').send(result.getPayload());
