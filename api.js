@@ -12,7 +12,7 @@ const log = require('./libraries/logging.js');
 //Routes
 var primary = require('./routes/primary.js');
 // Hard Coded Configs
-var service_port = 80;
+var service_port = 3035;
 
 // Pull Config
 const config = require('./config/auth-config.js');
