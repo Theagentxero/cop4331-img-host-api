@@ -241,7 +241,8 @@ router.post('/contact/:id', upload, function (err, req, res, next) {
                         console.log("File Resize Complete")
                         // My Daddy Gave Me A Name - https://www.youtube.com/watch?v=kkcbxjWG9Mc
                         var newBornName = uuidv4();
-                        var relPath = path.join(imgBaseFolder, newBornName);
+                        var base = __dirname.split(path.sep).pop();
+                        var relPath = path.join(base, imgBaseFolder, newBornName);
                         fs.writeFile(relPath, data, (err)=>{
                             if(err){
                                 result.setStatus(500);
@@ -292,7 +293,8 @@ router.get('/contact/:id', function(req, res){
     if ( !(_.has(req.params, "id")) || req.params.id == null || req.params.id == undefined){
         var index = Math.floor(Math.random() * defaultCrabList.length);
         var fname = defaultCrabList[index];
-        var relPath = path.join("default","generated",fname);
+        var base = __dirname.split(path.sep).pop();
+        var relPath = path.join(base,"default","generated",fname);
         var img = fs.createReadStream(relPath);
         img.on('open', function(){
             res.set('Content-type', 'image/jpeg');
@@ -311,7 +313,8 @@ router.get('/contact/:id', function(req, res){
     if(!mongodb.ObjectID.isValid(req.params.id)){
         var index = Math.floor(Math.random() * defaultCrabList.length);
         var fname = defaultCrabList[index];
-        var relPath = path.join("default","generated",fname);
+        var base = __dirname.split(path.sep).pop();
+        var relPath = path.join(base,"default","generated",fname);
         var img = fs.createReadStream(relPath);
         img.on('open', function(){
             res.set('Content-type', 'image/jpeg');
@@ -350,7 +353,8 @@ router.get('/contact/:id', function(req, res){
             if(contact == null || contact.length == 0){
                 var index = Math.floor(Math.random() * defaultCrabList.length);
                 var fname = defaultCrabList[index];
-                var relPath = path.join("default","generated",fname);
+                var base = __dirname.split(path.sep).pop();
+                var relPath = path.join(base,"default","generated",fname);
                 var img = fs.createReadStream(relPath);
                 img.on('open', function(){
                     res.set('Content-type', 'image/jpeg');
@@ -374,7 +378,8 @@ router.get('/contact/:id', function(req, res){
                         // Select A Crab
                         var index = Math.floor(Math.random() * defaultCrabList.length);
                         var fname = defaultCrabList[index];
-                        var relPath = path.join("default","generated",fname);
+                        var base = __dirname.split(path.sep).pop();
+                        var relPath = path.join(base,"default","generated",fname);
                         var img = fs.createReadStream(relPath);
                         img.on('open', function(){
                             res.set('Content-type', 'image/jpeg');
@@ -384,7 +389,8 @@ router.get('/contact/:id', function(req, res){
                         return;
                     }else{
                         // console.log(qres.rows[0])
-                        var relPath = path.join(imgBaseFolder, qres.rows[0].filename);
+                        var base = __dirname.split(path.sep).pop();
+                        var relPath = path.join(base, imgBaseFolder, qres.rows[0].filename);
                         // PG Insert Successful
                         var img = fs.createReadStream(relPath);
                         img.on('open', function(){
@@ -399,7 +405,8 @@ router.get('/contact/:id', function(req, res){
                 function failure(error){
                     var index = Math.floor(Math.random() * defaultCrabList.length);
                     var fname = defaultCrabList[index];
-                    var relPath = path.join("default","generated",fname);
+                    var base = __dirname.split(path.sep).pop();
+                    var relPath = path.join(base, "default","generated",fname);
                     var img = fs.createReadStream(relPath);
                     img.on('open', function(){
                         res.set('Content-type', 'image/jpeg');
