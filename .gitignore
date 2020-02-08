@@ -102,3 +102,12 @@ dist
 
 # TernJS port file
 .tern-port
+
+# DB Connection Configuration File
+config/db-connection.json
+
+# Keys
+config/keys/*.*
+
+# Images
+img/*.*
