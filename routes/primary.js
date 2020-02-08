@@ -75,6 +75,11 @@ var contactSchema = new Schema({
 
 var Contact = mongoose.model('contacts', contactSchema);
 
+var basePathAry = __dirname.split(path.sep)
+basePathAry.splice(basePathAry.length - 1 , 1);
+var basePath = basePathAry.join(path.sep);
+
+
 // Utility Functions
 function initializeRoute(req){
     var timer = new log.callTimer(req);
@@ -241,8 +246,8 @@ router.post('/contact/:id', upload, function (err, req, res, next) {
                         console.log("File Resize Complete")
                         // My Daddy Gave Me A Name - https://www.youtube.com/watch?v=kkcbxjWG9Mc
                         var newBornName = uuidv4();
-                        var base = __dirname.split(path.sep).pop();
-                        var relPath = path.join(base, imgBaseFolder, newBornName);
+
+                        var relPath = path.join(basePath, imgBaseFolder, newBornName);
                         fs.writeFile(relPath, data, (err)=>{
                             if(err){
                                 result.setStatus(500);
@@ -293,8 +298,7 @@ router.get('/contact/:id', function(req, res){
     if ( !(_.has(req.params, "id")) || req.params.id == null || req.params.id == undefined){
         var index = Math.floor(Math.random() * defaultCrabList.length);
         var fname = defaultCrabList[index];
-        var base = __dirname.split(path.sep).pop();
-        var relPath = path.join(base,"default","generated",fname);
+        var relPath = path.join(basePath,"default","generated",fname);
         var img = fs.createReadStream(relPath);
         img.on('open', function(){
             res.set('Content-type', 'image/jpeg');
@@ -313,8 +317,7 @@ router.get('/contact/:id', function(req, res){
     if(!mongodb.ObjectID.isValid(req.params.id)){
         var index = Math.floor(Math.random() * defaultCrabList.length);
         var fname = defaultCrabList[index];
-        var base = __dirname.split(path.sep).pop();
-        var relPath = path.join(base,"default","generated",fname);
+        var relPath = path.join(basePath,"default","generated",fname);
         var img = fs.createReadStream(relPath);
         img.on('open', function(){
             res.set('Content-type', 'image/jpeg');
@@ -353,8 +356,7 @@ router.get('/contact/:id', function(req, res){
             if(contact == null || contact.length == 0){
                 var index = Math.floor(Math.random() * defaultCrabList.length);
                 var fname = defaultCrabList[index];
-                var base = __dirname.split(path.sep).pop();
-                var relPath = path.join(base,"default","generated",fname);
+                var relPath = path.join(basePath,"default","generated",fname);
                 var img = fs.createReadStream(relPath);
                 img.on('open', function(){
                     res.set('Content-type', 'image/jpeg');
@@ -378,8 +380,7 @@ router.get('/contact/:id', function(req, res){
                         // Select A Crab
                         var index = Math.floor(Math.random() * defaultCrabList.length);
                         var fname = defaultCrabList[index];
-                        var base = __dirname.split(path.sep).pop();
-                        var relPath = path.join(base,"default","generated",fname);
+                        var relPath = path.join(basePath,"default","generated",fname);
                         var img = fs.createReadStream(relPath);
                         img.on('open', function(){
                             res.set('Content-type', 'image/jpeg');
@@ -389,8 +390,7 @@ router.get('/contact/:id', function(req, res){
                         return;
                     }else{
                         // console.log(qres.rows[0])
-                        var base = __dirname.split(path.sep).pop();
-                        var relPath = path.join(base, imgBaseFolder, qres.rows[0].filename);
+                        var relPath = path.join(basePath, imgBaseFolder, qres.rows[0].filename);
                         // PG Insert Successful
                         var img = fs.createReadStream(relPath);
                         img.on('open', function(){
@@ -405,8 +405,7 @@ router.get('/contact/:id', function(req, res){
                 function failure(error){
                     var index = Math.floor(Math.random() * defaultCrabList.length);
                     var fname = defaultCrabList[index];
-                    var base = __dirname.split(path.sep).pop();
-                    var relPath = path.join(base, "default","generated",fname);
+                    var relPath = path.join(basePath, "default","generated",fname);
                     var img = fs.createReadStream(relPath);
                     img.on('open', function(){
                         res.set('Content-type', 'image/jpeg');
