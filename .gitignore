@@ -110,4 +110,4 @@ config/db-connection.json
 config/keys/*.*
 
 # Images
-img/*.*
+img/*
