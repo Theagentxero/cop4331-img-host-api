@@ -57,7 +57,7 @@ pool.on('error', (err, client) => {
 });
 
 pool.on('connect', client => {
-    console.log(client);
+    //console.log(client);
     log.procedure("PG Connected");
 })
 pool.on('acquire', client => {

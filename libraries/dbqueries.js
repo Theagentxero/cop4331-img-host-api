@@ -20,9 +20,9 @@ const insert = {
 
 // Actual Query Function
 function performQuery_withValues_noLocal(pool, query, successCallback, failureCallback){
-    console.log(pool);
+    //console.log(pool);
     pool.connect((err, client, success, failure) => {
-        console.log(client);
+        //console.log(client);
         const shouldAbort = err => {
             if (err) {
                 //Error In Transaction
