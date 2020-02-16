@@ -47,9 +47,9 @@ pool.on('error', (err, client) => {
 // Create Express Instance
 const app = express();
 // Certificate
-const privateKey = fs.readFileSync(path.join(__dirname,'privkey.pem'), 'utf8');
-const certificate = fs.readFileSync('/etc/letsencrypt/live/img.crabrr.com/cert.pem', 'utf8');
-const ca = fs.readFileSync('/etc/letsencrypt/live/img.crabrr.com/chain.pem', 'utf8');
+const privateKey = fs.readFileSync('./ssl/privkey1.pem', 'utf8');
+const certificate = fs.readFileSync('./ssl/cert1.pem', 'utf8');
+const ca = fs.readFileSync('./ssl/chain1.pem', 'utf8');
 
 const credentials = {
 	key: privateKey,
