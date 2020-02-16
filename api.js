@@ -97,7 +97,7 @@ https.createServer({
     key: privateKey,
     cert: certificate,
     ca: ca
-}, app).listen(443, () => {
-    console.log('Listening On 443')
+}, app).listen(3030, () => {
+    console.log('Listening On 3030')
 })
 //app.listen(service_port, () => log.debug(`Listening on ${ service_port }`))
