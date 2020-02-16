@@ -38,6 +38,7 @@ pool.on('error', (err, client) => {
 
 // Create Express Instance
 const app = express();
+app.use(express.static(__dirname, { dotfiles: 'allow' } ));
 // Apply Express Configurations
 app.use(bodyParser.urlencoded({limit: '5mb', extended: true}));
 app.use(bodyParser.json({limit: '5mb'}));
