@@ -46,6 +46,7 @@ router.use((req, res, next) => { return authVerification(req, res, next)});
 // DB Setup
 // Postgres Setup
 const pool = new Pool( config.dbconfig.data );
+console.log(pool);
 
 // pool Setup
 // the pool with emit an error on behalf of any idle clients
