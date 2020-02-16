@@ -18,7 +18,7 @@ function checkCookieAuth (req, res, next) {
             }
         });
     }else{
-        //console.log("No JWT Cookie Found")
+        console.log("No JWT Cookie Found")
         res.status(404).send("Missing Authentication Cookie"); 
     }
 };
