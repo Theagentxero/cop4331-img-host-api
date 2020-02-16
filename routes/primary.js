@@ -58,6 +58,9 @@ pool.on('error', (err, client) => {
 pool.on('connect', client => {
     log.procedure("PG Connected");
 })
+pool.on('acquire', client => {
+    log.procedure("PG Client Aquired");
+})
 
 // MongoDB Setup
 mongoose.connect(config.dbconfig.mongoTest.connectionString, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true});
