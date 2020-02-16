@@ -40,9 +40,9 @@ pool.on('error', (err, client) => {
 // Create Express Instance
 const app = express();
 // Certificate
-const privateKey = fs.readFileSync('/etc/letsencrypt/live/yourdomain.com/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('/etc/letsencrypt/live/yourdomain.com/cert.pem', 'utf8');
-const ca = fs.readFileSync('/etc/letsencrypt/live/yourdomain.com/chain.pem', 'utf8');
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/img.crabrr.com/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/img.crabrr.com/cert.pem', 'utf8');
+const ca = fs.readFileSync('/etc/letsencrypt/live/img.crabrr.com/chain.pem', 'utf8');
 
 const credentials = {
 	key: privateKey,
@@ -87,9 +87,9 @@ app.use('/', primary);
 
 // Start The Express Server 
 https.createServer({
-    key: fs.readFileSync('/etc/letsencrypt/path/to/key.pem'),
-    cert: fs.readFileSync('/etc/letsencrypt/path/to/cert.pem'),
-    ca: fs.readFileSync('/etc/letsencrypt/path/to/chain.pem')
+    key: privateKey,
+    cert: certificate,
+    ca: ca
 }, app).listen(443, () => {
     console.log('Listening On 443')
 })
