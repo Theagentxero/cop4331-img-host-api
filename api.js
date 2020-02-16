@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const uuidv4 = require('uuid/v4');
 var cors = require('cors');
 var cookieParser = require('cookie-parser');
+const https = require('https');
 //Libraries
 const log = require('./libraries/logging.js');
 //Routes
@@ -38,6 +39,17 @@ pool.on('error', (err, client) => {
 
 // Create Express Instance
 const app = express();
+// Certificate
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/yourdomain.com/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/yourdomain.com/cert.pem', 'utf8');
+const ca = fs.readFileSync('/etc/letsencrypt/live/yourdomain.com/chain.pem', 'utf8');
+
+const credentials = {
+	key: privateKey,
+	cert: certificate,
+	ca: ca
+};
+
 app.use(express.static(__dirname, { dotfiles: 'allow' } ));
 // Apply Express Configurations
 app.use(bodyParser.urlencoded({limit: '5mb', extended: true}));
@@ -73,5 +85,12 @@ app.get('/status', async function(req, res) {
 app.use('/', primary);
 // Routes - END
 
-// Start The Express Server
-app.listen(service_port, () => log.debug(`Listening on ${ service_port }`))
+// Start The Express Server 
+https.createServer({
+    key: fs.readFileSync('/etc/letsencrypt/path/to/key.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/path/to/cert.pem'),
+    ca: fs.readFileSync('/etc/letsencrypt/path/to/chain.pem')
+}, app).listen(443, () => {
+    console.log('Listening On 443')
+})
+//app.listen(service_port, () => log.debug(`Listening on ${ service_port }`))
