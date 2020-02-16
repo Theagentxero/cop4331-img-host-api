@@ -55,6 +55,10 @@ pool.on('error', (err, client) => {
     process.exit(-1);
 });
 
+pool.on('connect', client => {
+    log.procedure("PG Connected");
+})
+
 // MongoDB Setup
 mongoose.connect(config.dbconfig.mongoTest.connectionString, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true});
 var mongo = mongoose.connection;
