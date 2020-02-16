@@ -1,5 +1,6 @@
 // Modules
 const fs = require('fs');
+var path = require('path');
 const express = require('express');
 const { Pool } = require('pg');
 const jwt = require('jsonwebtoken');
